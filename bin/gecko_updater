@@ -2,5 +2,4 @@
 
 require 'geckodriver/helper'
 
-Geckodriver::Helper.new.update
-
+Geckodriver::Helper.new.update(ARGV[0])

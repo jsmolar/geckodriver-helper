@@ -8,15 +8,31 @@ require 'zlib'
 require 'rubygems/package'
 
 module Geckodriver
+  def self.set_version(version)
+    Geckodriver::Helper.new.update(version)
+  end
+
   class Helper
+    def initialize
+      @gecko_release_parser = GeckoReleasePageParser.new(platform)
+    end
 
     def run *args
       download
       exec binary_path, *args
     end
 
-    def download hit_network=false
+    def update(version = nil)
+      version ||= @gecko_release_parser.latest_release_version
+
+      hit_network = (current_version != version) ? true : false
+      download(hit_network)
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def download(hit_network = false, version: nil)
       return if File.exists?(binary_path) && !hit_network
+
       url = download_url
       filename = File.basename url
       Dir.chdir platform_install_dir do
@@ -32,6 +48,12 @@ module Geckodriver
 
       raise "Could not unarchive #{filename} to get #{binary_path}" unless File.exists? binary_path
       FileUtils.chmod 'ugo+rx', binary_path
+
+      File.open(version_path, 'w') { |file| file.write(version) }
+    end
+
+    def download_url(version = nil)
+      @gecko_release_parser.download_release(version)
     end
 
     def unpack_archive(file)
@@ -41,14 +63,6 @@ module Geckodriver
         io = ungzip(file)
         untar(io)
       end
-    end
-
-    def update
-      download true
-    end
-
-    def download_url
-      GeckoReleasePageParser.new(platform).latest_release
     end
 
     def binary_path
@@ -84,6 +98,14 @@ module Geckodriver
     end
 
     private
+
+    def current_version
+      File.read(version_path).strip if File.exist?(version_path)
+    end
+
+    def version_path
+      File.join(install_dir, '.geckodriver-version')
+    end
 
     def unzip(zipfile)
       Archive::Zip.extract(zipfile, '.', :overwrite => :all)

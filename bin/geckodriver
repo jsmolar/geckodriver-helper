@@ -2,4 +2,4 @@
 
 require 'geckodriver/helper'
 
-Geckodriver::Helper.new.run *ARGV
+Geckodriver::Helper.new.run(*ARGV)
