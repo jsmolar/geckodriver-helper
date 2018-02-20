@@ -43,6 +43,11 @@ module Geckodriver
       def download_release(version)
         version.nil? ? latest_download_release : download(version)
       end
+
+      def authentication(token)
+        url = "#{GIT_API_URL}?access_token=#{token}"
+        @parsed_page = JSON.parse(open(url).read)
+      end
     end
   end
 end

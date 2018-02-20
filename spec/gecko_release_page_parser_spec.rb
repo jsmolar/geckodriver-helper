@@ -19,7 +19,7 @@ describe Geckodriver::Helper::GeckoReleasePageParser do
            when 'win' then file = 'win32.zip'
            else raise "#{platform} is not supported"
          end
-        expect(parser.download_url(data)).to eq "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-#{file}"
+        expect(parser.download('v0.193.1')).to eq "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-#{file}"
       end
     end
   end
