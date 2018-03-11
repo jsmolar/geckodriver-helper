@@ -36,6 +36,26 @@ then, in your specs:
 If you'd like to force-upgrade to the latest version of geckodriver,
 run the script `gecko_updater`
 
+# Install specific version of Geckodriver
+
+If you want to install specific version of driver use this method before creating 
+drive `Capybara::Selenium::Driver.new(app, :browser => :firefox)`.
+        
+    Geckodriver.install(version: #{VERSION})
+
+
+# Use token
+
+Geckodriver needs to be downloaded from Github release repositories. 
+In case that you have trouble to access Github 
+e.g. rate limiting (https://developer.github.com/v3/#rate-limiting) 
+use OAtu2 token (https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/).
+Then configure Geckodriver helper:
+
+    Geckodriver.install(token: #{TOKEN})
+Or
+
+    Geckodriver.update(token: #{TOKEN})
 
 # License
 
