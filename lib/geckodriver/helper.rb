@@ -8,37 +8,23 @@ require 'zlib'
 require 'rubygems/package'
 
 module Geckodriver
-  def self.install(version: nil, token: nil)
-    Geckodriver::Helper.new.install_driver(version, token)
-  end
-
-  def self.update(version: nil, token: nil)
-    Geckodriver::Helper.new.update_driver(version, token)
+  def self.set_parameters(version: nil, token: nil)
+    Geckodriver::Helper.new.update(version, token)
   end
 
   class Helper
-    def initialize
-      @gecko_release_parser = GeckoReleasePageParser.new(platform)
-    end
-
     def run(*args)
+      @gecko_release_parser = GeckoReleasePageParser.new(platform)
       download
       exec binary_path, *args
     end
 
-    def install_driver(version, token)
-      @gecko_release_parser.authentication(token) unless token.nil?
-
-      hit_network = current_version != version
-      download(hit_network, version: version)
-      exec binary_path unless File.exist?(binary_path)
-    end
-
-    def update_driver(version, token)
+    def update(version, token)
+      @gecko_release_parser = GeckoReleasePageParser.new(platform, token: token)
       @gecko_release_parser.authentication(token) unless token.nil?
       version ||= @gecko_release_parser.latest_release_version
 
-      hit_network = current_version != version
+      hit_network = (current_version != version) ? true : false
       download(hit_network, version: version)
     end
 

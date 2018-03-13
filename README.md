@@ -31,17 +31,23 @@ then, in your specs:
     end
 
 
-# Updating Geckodriver
+# Specifying a version
 
-If you'd like to force-upgrade to the latest version of geckodriver,
-run the script `gecko_updater`
 
-# Install specific version of Geckodriver
+If you want to run a specific version of geckodriver, you can set the version like so:
 
-If you want to install specific version of driver use this method before creating 
-drive `Capybara::Selenium::Driver.new(app, :browser => :firefox)`.
-        
-    Geckodriver.install(version: #{VERSION})
+    Geckodriver.set_parameters(version: #{VERSION})
+
+Or, from the command line, you can run
+
+    geckodriver_update v0.19.1
+    
+# Force update to latest version of Geckodriver
+
+If you'd like to force-upgrade to the latest version of geckodriver:
+    
+1. delete the directory $HOME/.geckodriver-helper
+2. run geckodriver-update
 
 
 # Use token
@@ -52,10 +58,8 @@ e.g. rate limiting (https://developer.github.com/v3/#rate-limiting)
 use OAtu2 token (https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/).
 Then configure Geckodriver helper:
 
-    Geckodriver.install(token: #{TOKEN})
-Or
+    Geckodriver.set_parameters(token: #{TOKEN})
 
-    Geckodriver.update(token: #{TOKEN})
 
 # License
 

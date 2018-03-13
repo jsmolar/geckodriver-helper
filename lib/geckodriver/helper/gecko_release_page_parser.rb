@@ -8,9 +8,9 @@ module Geckodriver
 
       attr_reader :platform
 
-      def initialize(platform)
+      def initialize(platform, token: nil)
         @platform = platform
-        @parsed_page = JSON.parse(open(GIT_API_URL).read)
+        (token != nil) ? authentication(token) : @parsed_page = JSON.parse(open(GIT_API_URL).read)
       end
 
       def download(version)
